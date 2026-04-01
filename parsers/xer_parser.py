@@ -130,6 +130,17 @@ class XERParser(BaseParser):
         # Extract resource assignments (TASKRSRC table)
         schedule.resource_assignments = self._extract_assignments(tables)
 
+        # Fallback: compute project dates from activities if not in PROJECT table
+        if schedule.activities:
+            if not schedule.project.start_date:
+                starts = [a.start_date for a in schedule.activities if a.start_date]
+                if starts:
+                    schedule.project.start_date = min(starts)
+            if not schedule.project.finish_date:
+                finishes = [a.finish_date for a in schedule.activities if a.finish_date]
+                if finishes:
+                    schedule.project.finish_date = max(finishes)
+
         return schedule
 
     # ── Raw XER parsing ──────────────────────────────────────────────────
@@ -232,9 +243,17 @@ class XERParser(BaseParser):
             row = project_rows[0]  # take first project
             info.project_id = row.get("proj_id", "")
             info.name = row.get("proj_short_name", "") or row.get("proj_name", "")
-            info.data_date = self._parse_p6_date(row.get("last_recalc_date", ""))
-            info.start_date = self._parse_p6_date(row.get("plan_start_date", ""))
-            info.finish_date = self._parse_p6_date(row.get("plan_end_date", ""))
+            info.data_date = self._parse_p6_date(
+                row.get("last_recalc_date", "") or row.get("last_schedule_date", "")
+            )
+            info.start_date = self._parse_p6_date(
+                row.get("plan_start_date", "") or row.get("scd_start_date", "")
+                or row.get("act_start_date", "")
+            )
+            info.finish_date = self._parse_p6_date(
+                row.get("plan_end_date", "") or row.get("scd_end_date", "")
+                or row.get("plan_finish_date", "") or row.get("fcst_end_date", "")
+            )
 
         return info
 
