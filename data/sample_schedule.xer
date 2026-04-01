@@ -1,0 +1,49 @@
+ERMHDR	20.12	2026-01-15	Project	admin	admin	database	
+%T	PROJECT
+%F	proj_id	proj_short_name	plan_start_date	plan_end_date	last_recalc_date
+%R	1001	Highway Bridge Rehab	2026-01-01 08:00	2026-12-31 17:00	2026-03-01 08:00
+%T	CALENDAR
+%F	clndr_id	clndr_name	default_flag	day_hr_cnt
+%R	101	Standard 5-Day	Y	8
+%T	PROJWBS
+%F	wbs_id	wbs_short_name	wbs_name	parent_wbs_id	seq_num
+%R	W1	PROJ	Highway Bridge Rehab		0
+%R	W2	DESIGN	Design Phase	W1	1
+%R	W3	CONSTR	Construction Phase	W1	2
+%T	RSRC
+%F	rsrc_id	rsrc_short_name	rsrc_name	rsrc_type
+%R	R1	ENG-A	Engineer Alpha	RT_Labor
+%R	R2	ENG-B	Engineer Beta	RT_Labor
+%R	R3	CREW-1	Field Crew 1	RT_Labor
+%T	TASK
+%F	task_id	task_code	task_name	task_type	status_code	wbs_id	clndr_id	phys_complete_pct	target_drtn_hr_cnt	remain_drtn_hr_cnt	early_start_date	early_end_date	act_start_date	act_end_date	target_start_date	target_end_date	total_float_hr_cnt	free_float_hr_cnt	cstr_type	cstr_date
+%R	1	A1000	Mobilization	TT_Task	TK_Complete	W2	101	100	40	0	2026-01-01 08:00	2026-01-05 17:00	2026-01-01 08:00	2026-01-05 17:00	2026-01-01 08:00	2026-01-05 17:00	0	0		
+%R	2	A1010	Site Survey	TT_Task	TK_Complete	W2	101	100	24	0	2026-01-06 08:00	2026-01-08 17:00	2026-01-06 08:00	2026-01-09 17:00	2026-01-06 08:00	2026-01-08 17:00	0	0		
+%R	3	A1020	Design Development	TT_Task	TK_Active	W2	101	60	80	32	2026-01-10 08:00	2026-01-23 17:00			2026-01-09 08:00	2026-01-22 17:00	0	0		
+%R	4	A1030	Design Review	TT_Task	TK_NotStart	W2	101	0	24	24	2026-01-24 08:00	2026-01-28 17:00			2026-01-23 08:00	2026-01-27 17:00	16	8		
+%R	5	A1040	Permits	TT_Task	TK_NotStart	W2	101	0	80	80	2026-01-24 08:00	2026-02-06 17:00			2026-01-23 08:00	2026-02-05 17:00	0	0	CS_SNET	2026-01-24 08:00
+%R	6	A2000	Foundation Work	TT_Task	TK_NotStart	W3	101	0	120	120	2026-02-07 08:00	2026-02-27 17:00			2026-02-06 08:00	2026-02-26 17:00	0	0		
+%R	7	A2010	Steel Erection	TT_Task	TK_NotStart	W3	101	0	160	160	2026-02-28 08:00	2026-03-27 17:00			2026-02-27 08:00	2026-03-26 17:00	0	0		
+%R	8	A2020	Deck Pour	TT_Task	TK_NotStart	W3	101	0	40	40	2026-03-28 08:00	2026-04-03 17:00			2026-03-27 08:00	2026-04-02 17:00	0	0		
+%R	9	A2030	Project Closeout	TT_Mile	TK_NotStart	W3	101	0	0	0	2026-04-04 08:00	2026-04-04 17:00			2026-04-03 08:00	2026-04-03 17:00	0	0		
+%T	TASKPRED
+%F	task_pred_id	task_id	pred_task_id	pred_type	lag_hr_cnt
+%R	1	2	1	PR_FS	0
+%R	2	3	2	PR_FS	0
+%R	3	4	3	PR_FS	0
+%R	4	5	3	PR_FS	0
+%R	5	6	4	PR_FS	0
+%R	6	6	5	PR_FS	0
+%R	7	7	6	PR_FS	0
+%R	8	8	7	PR_FS	0
+%R	9	9	8	PR_FS	0
+%T	TASKRSRC
+%F	taskrsrc_id	task_id	rsrc_id	target_qty	act_reg_qty	target_cost	act_reg_cost
+%R	1	1	R1	40	40	4000	4000
+%R	2	2	R1	24	24	2400	2400
+%R	3	3	R1	80	48	8000	4800
+%R	4	4	R2	24	0	2400	0
+%R	5	6	R3	120	0	12000	0
+%R	6	7	R3	160	0	16000	0
+%R	7	8	R3	40	0	4000	0
+%E

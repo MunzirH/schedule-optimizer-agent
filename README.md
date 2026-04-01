@@ -1,180 +1,92 @@
 # Schedule Optimizer Agent
 
-An open-source AI agent for analyzing and optimizing project schedules.
+A comprehensive construction schedule analyzer that ingests schedules from any major format, runs industry-standard quality checks, and (coming soon) provides AI-powered analysis.
 
-It detects dependency issues, resource conflicts, and critical path risks — and recommends smarter task sequencing with clear, explainable outputs.
+## Current Status
 
----
+| Phase | Status | Description |
+|-------|--------|-------------|
+| 1. Multi-format ingestion | ✅ Done | CSV, XER, XML parsers with unified data model |
+| 2. Unified schedule model | ✅ Done | Rich data classes for activities, relationships, calendars, WBS, resources |
+| 3. DCMA 14-point analysis | 🔲 Next | Industry-standard schedule quality checks |
+| 4. Risk & forensics | 🔲 Planned | Monte Carlo, delay analysis, update comparison |
+| 5. AI agent | 🔲 Planned | Natural language schedule Q&A |
+| 6. Web app | 🔲 Planned | Dashboard, Gantt, chat interface |
 
-## 🚀 Overview
+## Supported Formats
 
-Project schedules are often complex, manually maintained, and prone to cascading delays.  
-This project introduces an AI-driven approach to schedule analysis and optimization across multiple industries.
+| Format | Extension | Source | Status |
+|--------|-----------|--------|--------|
+| CSV/TSV | `.csv`, `.tsv` | Any (flexible column mapping) | ✅ |
+| Primavera P6 XER | `.xer` | Oracle Primavera P6 | ✅ |
+| P6 PMXML | `.xml` | Oracle Primavera P6 | ✅ |
+| MS Project XML | `.xml` | Microsoft Project | ✅ |
+| MS Project Binary | `.mpp` | Microsoft Project | 🔲 |
+| Asta Powerproject | `.pp` | Asta | 🔲 |
+| PDF Schedules | `.pdf` | Any | 🔲 |
 
-It supports common scheduling formats including:
-- CSV / Excel
-- Primavera P6 (XER files)
+## Quick Start
 
----
+```bash
+git clone https://github.com/MunzirH/schedule-optimizer-agent.git
+cd schedule-optimizer-agent
+pip install -r requirements.txt
 
-## 🧠 Key Features
+# Parse any schedule file
+python -c "
+from parsers.registry import create_default_registry
+registry = create_default_registry()
+schedule = registry.parse('data/sample_schedule.xer')
+print(schedule.summary())
+"
 
-### 🔍 Schedule Analysis
-- Detect missing or broken dependencies  
-- Identify critical path and zero-float tasks  
-- Highlight bottlenecks and schedule risks  
-
-### ⚙️ Optimization
-- Recommend task resequencing  
-- Suggest parallelization opportunities  
-- Improve resource allocation  
-- Reduce overall project duration  
-
-### 💬 Explainability
-- Generate clear, human-readable insights  
-- Understand *why* changes are recommended  
-- Make better decisions with context  
-
----
-
-## 📂 Supported Formats
-
-### ✅ CSV / Excel
-Standard tabular schedule format with:
-- Task ID
-- Start / End dates
-- Duration
-- Predecessors
-- Resources
-
-### 🏗️ Primavera P6 (XER)
-- Parse XER files into structured task data  
-- Extract:
-  - Activities
-  - Relationships
-  - Resources
-- Enable enterprise-scale schedule analysis  
-
----
-
-## 📊 Example
-
-### Input (CSV)
-
-```csv
-task_id,task_name,start_date,end_date,duration,predecessors,resource
-1,Design,2026-01-01,2026-01-05,5,,Engineer A
-2,Review,2026-01-06,2026-01-08,3,1,Engineer A
-3,Build,2026-01-06,2026-01-12,7,1,Engineer B
+# Run tests
+python -m unittest discover -s tests -v
 ```
 
-### Output
-
-- Critical Path: Task 1 → Task 3  
-- Resource Conflict: Engineer A assigned to overlapping tasks  
-- Recommendations:
-  - Delay Task 2 or reassign resource  
-  - Parallelize tasks where possible  
-  - Reduce downstream delays  
-
----
-
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 schedule-optimizer-agent/
-├── agent/              # Core agent logic
-├── optimization/       # Algorithms (CPM, leveling, etc.)
-├── parsers/            # CSV, Excel, XER parsers
-├── data/               # Sample datasets
-├── app/                # UI / API (Streamlit, FastAPI)
-├── notebooks/          # Demos and experiments
-├── tests/              # Unit tests
+├── models/
+│   └── schedule.py          # Unified data model (ScheduleData, Activity, etc.)
+├── parsers/
+│   ├── base.py              # Abstract base parser interface
+│   ├── registry.py          # Auto-routes files to correct parser
+│   ├── csv_parser.py        # CSV/TSV with flexible column mapping
+│   ├── xer_parser.py        # Primavera P6 XER
+│   └── xml_parser.py        # P6 PMXML + MS Project XML
+├── optimization/
+│   └── critical_path.py     # Critical path + float computation
+├── agent/
+│   └── analyzer.py          # Schedule issue analysis
+├── tests/
+│   ├── test_models.py
+│   ├── test_csv_parser.py
+│   ├── test_xer_parser.py
+│   ├── test_xml_parser.py
+│   └── test_registry.py
+├── data/                    # Sample schedule files for testing
+├── requirements.txt
+└── README.md
 ```
 
----
+## Architecture
 
-## ⚡ Quick Start
+Every parser converts its format into a unified `ScheduleData` object:
 
-### 1. Clone the repository
+```
+  .csv ──→ CSVScheduleParser ──┐
+  .xer ──→ XERParser ──────────┼──→ ScheduleData ──→ Analysis Engine
+  .xml ──→ XMLParser ──────────┘                      (DCMA 14, Critical Path, AI)
+```
+
+Adding a new format: subclass `BaseParser`, implement `parse()`, register it in `registry.py`.
+
+## Running Tests
+
 ```bash
-git clone https://github.com/yourusername/schedule-optimizer-agent.git
-cd schedule-optimizer-agent
+python -m unittest discover -s tests -v
 ```
 
-### 2. Install dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Run the app
-```bash
-python app/main.py
-```
-
----
-
-## 🛠️ Tech Stack
-
-- Python  
-- pandas / numpy  
-- OR-Tools (planned)  
-- Streamlit (UI)  
-- NetworkX (dependency graphs)  
-
----
-
-## 🌍 Use Cases
-
-### Construction & Infrastructure
-- Optimize activity sequencing  
-- Protect key milestones  
-- Manage shared crews  
-
-### Transportation Projects
-- Analyze large program schedules  
-- Reduce cascading delays  
-- Improve planning reliability  
-
-### Software Development
-- Identify blocked tasks  
-- Improve sprint planning  
-- Balance workloads  
-
----
-
-## 🤝 Contributing
-
-We welcome contributions from:
-
-- Data scientists  
-- Software engineers  
-- Project managers  
-- Students and researchers  
-
-### Ways to contribute:
-- Add support for new file formats  
-- Improve optimization algorithms  
-- Build visualizations (Gantt charts, dashboards)  
-- Enhance documentation  
-- Add integrations (Primavera, MS Project, etc.)  
-
-Check issues labeled `good first issue` or `help wanted` to get started.
-
----
-
-## 🔮 Roadmap
-
-- [ ] Critical Path Method (CPM)  
-- [ ] Resource leveling  
-- [ ] Monte Carlo schedule simulation  
-- [ ] Full XER parser with relationships & calendars  
-- [ ] LLM-powered explanation engine  
-- [ ] What-if scenario analysis  
-- [ ] Integration with MS Project (XML)  
-
----
-
-## 📌 Vision
-
-To build a community-driven AI platform that transforms how project schedules are analyzed, optimized, and managed across industries.
+80 tests covering all parsers, data model, and registry routing.

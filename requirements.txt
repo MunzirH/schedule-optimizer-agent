@@ -1,3 +1,2 @@
-pandas
-numpy
-networkx
+pandas>=2.0
+networkx>=3.0

@@ -1,36 +1,22 @@
-# Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Virtual environments
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
 .venv/
 venv/
 env/
-
-# Environment variables
 .env
-
-# Jupyter
-.ipynb_checkpoints/
-
-# Build / packaging
-build/
-dist/
-*.egg-info/
-
-# Logs
-*.log
-
-# OS files
-.DS_Store
-
-# IDEs
-.vscode/
-.idea/
-
-# Coverage / testing
+*.db
+*.sqlite3
 .pytest_cache/
 .coverage
 htmlcov/
+.mypy_cache/
+.ruff_cache/
+*.log
+.DS_Store
+Thumbs.db
