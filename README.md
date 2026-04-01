@@ -8,9 +8,9 @@ A comprehensive construction schedule analyzer that ingests schedules from any m
 |-------|--------|-------------|
 | 1. Multi-format ingestion | ✅ Done | CSV, XER, XML parsers with unified data model |
 | 2. Unified schedule model | ✅ Done | Rich data classes for activities, relationships, calendars, WBS, resources |
-| 3. DCMA 14-point analysis | 🔲 Next | Industry-standard schedule quality checks |
-| 4. Risk & forensics | 🔲 Planned | Monte Carlo, delay analysis, update comparison |
-| 5. AI agent | 🔲 Planned | Natural language schedule Q&A |
+| 3. DCMA 14-point analysis | ✅ Done | Industry-standard schedule quality checks |
+| 4. Risk & forensics | ✅ Done | Monte Carlo, delay analysis, update comparison |
+| 5. AI agent | ✅ Done | Natural language schedule Q&A |
 | 6. Web app | 🔲 Planned | Dashboard, Gantt, chat interface |
 
 ## Supported Formats
